@@ -19,9 +19,14 @@ public:
     }
 
     inline void add(const BcdNumber &bcdNumber) {
-        for (unsigned long i = 0; i < EXPANSION_SIZE; ++i) {
-            bcd[i] += (char) bcdNumber.bcd[i];
+        auto idx = EXPANSION_SIZE - 1;
+        do {
+            bcd[idx] += (char) bcdNumber.bcd[idx];
+            --idx;
         }
+        while(idx > 0);
+
+        bcd[0] += (char) bcdNumber.bcd[0];
     }
 
     std::string _inspect;
@@ -60,7 +65,7 @@ private:
         }
     }
 
-public:
+  public:
     char *to_s(char* buf, unsigned buflen) {
         assert(buflen >= EXPANSION_SIZE);
 
