@@ -1,0 +1,7 @@
+all: google-benchmark pkg-config
+
+google-benchmark:
+	HOMEBREW_NO_INSTALL_CLEANUP=y brew install -q google-benchmark
+	
+pkg-config:
+	HOMEBREW_NO_INSTALL_CLEANUP=y brew install -q pkg-config
