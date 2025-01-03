@@ -87,7 +87,7 @@ struct MultiplicationTable {
     BcdNumber numbers[16];
 
     void setup(unsigned factor) {
-      printf("Setting up MultiplicationTable w/factor to %d\n", factor);
+        printf("Setting up MultiplicationTable w/factor to %d\n", factor);
         for (size_t i = 0; i < 16; ++i) {
             numbers[i].set(i * factor);
         }
@@ -116,7 +116,7 @@ static MultiplicationTables multiplicationTables;
     unsigned long number_shr_by_4 = number >> 4;
 
     unsigned i = 0;
-    
+
     while(number) {
         // get multiplication table for this round
         {
