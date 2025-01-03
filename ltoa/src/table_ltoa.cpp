@@ -87,6 +87,7 @@ struct MultiplicationTable {
     BcdNumber numbers[16];
 
     void setup(unsigned factor) {
+      printf("Setting up MultiplicationTable w/factor to %d\n", factor);
         for (size_t i = 0; i < 16; ++i) {
             numbers[i].set(i * factor);
         }
@@ -95,8 +96,11 @@ struct MultiplicationTable {
 
 struct MultiplicationTables {
     MultiplicationTable tables[8];
-
     MultiplicationTables() {
+      setup();
+    }
+
+    void setup() {
         unsigned factor = 1;
         for (auto &table: tables) {
             table.setup(factor);
@@ -105,18 +109,34 @@ struct MultiplicationTables {
     }
 };
 
-static MultiplicationTables multiplicationTables;
-
 char *table_utoa(unsigned long number, char *buf, size_t buflen) {
+static MultiplicationTables multiplicationTables;
     BcdNumber sum;
     const unsigned rounds = 8;
-    for (unsigned i = 0; i < rounds; ++i) {
+    unsigned long number_shr_by_4 = number >> 4;
+
+    unsigned i = 0;
+    
+    while(number) {
         // get multiplication table for this round
-        MultiplicationTable *pTable = multiplicationTables.tables + i;
-        auto xdigit = number % 16;
-        number /= 16;
-        BcdNumber &bcdNumber = pTable->numbers[xdigit];
-        sum.add(bcdNumber);
+        {
+            assert(i < rounds);
+            MultiplicationTable *pTable = multiplicationTables.tables + i;
+            auto xdigit = number & 0x0f;
+            number = number >> 8;
+            BcdNumber &bcdNumber = pTable->numbers[xdigit];
+            sum.add(bcdNumber);
+            ++i;
+        }
+        {
+            assert(i < rounds);
+            MultiplicationTable *pTable = multiplicationTables.tables + i;
+            auto xdigit = number_shr_by_4 & 0x0f;
+            number_shr_by_4 = number_shr_by_4 >> 8;
+            BcdNumber &bcdNumber = pTable->numbers[xdigit];
+            sum.add(bcdNumber);
+            ++i;
+        }
     }
 
     return sum.to_s(buf, buflen);

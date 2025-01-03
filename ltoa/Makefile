@@ -6,10 +6,8 @@ SRC_DIR=src
 all: debug release
 
 debug:
-	@echo "Building in debug mode"
 	@BUILD_MODE=debug make binary
 release:
-	@echo "Building in release mode"
 	@BUILD_MODE=release make binary
 
 # --- directories and filenames
@@ -22,11 +20,11 @@ TARGET=$(TARGET_DIR)/$(BINARY_NAME)
 # --- compiler flags
 
 CXXFLAGS:=-Wall -std=c++11 $(shell pkg-config --cflags --libs benchmark) -lpthread
-ifeq ($(BUILD_MODE),"debug")
-CXXFLAGS+=-g -D_DEBUG
+ifeq ($(BUILD_MODE),debug)
+CXXFLAGS:=-g -D_DEBUG $(CXXFLAGS)
 endif
-ifeq ($(BUILD_MODE),"release")
-CXXFLAGS+=-DNDEBUG -O3
+ifeq ($(BUILD_MODE),release)
+CXXFLAGS:=-DNDEBUG -O3 $(CXXFLAGS)
 endif
 
 # --- source files
@@ -42,6 +40,7 @@ clean:
 	rm -rf bin/* tmp/obj
 
 $(TARGET): $(OBJ_FILES)
+	@echo "Building in $(BUILD_MODE) mode"
 	$(shell mkdir -p $(TARGET_DIR) )
 	g++ -o $@ $(CXXFLAGS)  $^
 
