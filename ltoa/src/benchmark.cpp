@@ -27,6 +27,7 @@ Payload CreatePayload(size_t length) {
     }
     // explicit test cases
     auto idx = 0;
+    payload.entries[idx++] = 951;
     payload.entries[idx++] = 950;
     payload.entries[idx++] = 0;
     return payload;
@@ -100,7 +101,7 @@ private:
             auto ptr1 = impl1(entries[i], buf1, sizeof(buf1) - 1);
             auto ptr2 = impl2(entries[i], buf2, sizeof(buf2) - 1);
             if (strcmp(ptr1, ptr2) != 0) {
-                printf(R"(conversion is incorrect for %lu: "%s" vs "%s")", entries[i], ptr1, ptr2);
+                printf(R"(conversion is incorrect for %lu: "%s" vs "%s")" "\n", entries[i], ptr1, ptr2);
                 assert(!strcmp(ptr1, ptr2));
             }
         }
