@@ -1,0 +1,5 @@
+#!/bin/bash
+set -eu -o pipefail
+set -xv
+make debug
+bin/debug/benchmark

@@ -1,2 +1,4 @@
 #!/bin/bash
-bin/benchmark
+set -eu -o pipefail
+make
+bin/release/benchmark

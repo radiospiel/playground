@@ -1,7 +1,18 @@
-all: required-dependencies bin/benchmark
+all: required-dependencies debug release
 
-bin/benchmark:
-	g++ -DNDEBUG -O3 -std=c++11 $(shell pkg-config --cflags --libs benchmark) -lpthread ltoa.cpp -o bin/benchmark
+clean:
+	rm -rf bin/*
+
+debug: bin/debug/benchmark Makefile
+release: bin/release/benchmark Makefile
+
+bin/release/benchmark: src/ltoa.cpp
+	mkdir -p bin/release
+	g++ -DNDEBUG -Wall -O3 -std=c++11 $(shell pkg-config --cflags --libs benchmark) -lpthread $<  -o $@
+
+bin/debug/benchmark: src/ltoa.cpp
+	mkdir -p bin/debug
+	g++ -g -D_DEBUG -Wall -std=c++11 $(shell pkg-config --cflags --libs benchmark) -lpthread $<  -o $@
 	
 required-dependencies: .Makefile.dependencies.installed
 
